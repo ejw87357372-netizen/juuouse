@@ -6,7 +6,7 @@
 
 window.SITE = {
   // ▼ GA4 측정 ID (Google Analytics > 관리 > 데이터 스트림에서 복사)
-  gaId: "G-XXXXXXXXXX",
+  gaId: "G-PPR7Y2T0PX",
 
   // ▼ 바깥으로 나가는 링크에 자동으로 붙는 UTM
   utm: {
