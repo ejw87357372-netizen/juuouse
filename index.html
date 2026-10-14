@@ -123,6 +123,12 @@
       background:#ffe3f2;color:#c2378f;font-size:11px;font-weight:700;vertical-align:2px;
     }
     .m-foot{text-align:center;font-size:12px;color:#bbb6ba;margin-top:40px}
+    /* 사업자 정보 (links.js 의 business 에서 관리) */
+    .biz{font-size:11.5px;line-height:1.7;color:#a59ba3;word-break:keep-all}
+    .biz:empty{display:none}
+    .biz span+span::before{content:"|";margin:0 6px;opacity:.5}
+    .m-view .biz{text-align:center;margin-top:40px}
+    .m-view .biz + .m-foot{margin-top:8px}
     @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
     /* =========================================================
@@ -201,6 +207,8 @@
       .pc-card .go i{font-style:normal;transition:transform .25s}
       .pc-card:hover .go i{transform:translateX(5px)}
       .pc-foot{margin-top:40px;font-size:12.5px;color:var(--sub);text-align:right}
+      .pc-main .biz{margin-top:40px;text-align:right;color:var(--sub)}
+      .pc-main .biz + .pc-foot{margin-top:6px}
     }
     @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   </style>
@@ -221,6 +229,7 @@
     <div class="m-dots" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="m-section" data-section></div>
     <nav class="m-list" id="m-list"></nav>
+    <div class="biz" data-biz></div>
     <footer class="m-foot">© <span data-year></span> juuouse</footer>
   </main>
 
@@ -249,6 +258,7 @@
         <div class="filters" id="filters"></div>
       </div>
       <div class="pc-grid" id="pc-grid"></div>
+      <div class="biz" data-biz></div>
       <footer class="pc-foot">© <span data-year></span> juuouse.com</footer>
     </main>
   </div>
@@ -290,6 +300,20 @@
     document.querySelectorAll("[data-bio]").forEach(function(el){ el.textContent = S.profile.bio; });
     document.querySelectorAll("[data-section]").forEach(function(el){ el.textContent = S.sectionTitle; });
     document.querySelectorAll("[data-year]").forEach(function(el){ el.textContent = new Date().getFullYear(); });
+
+    // 사업자 정보 (빈 칸은 자동으로 숨김, 전화번호는 showPhone 으로 켜고 끔)
+    var B = S.business || {};
+    var bizRows = [
+      [["상호", B.name], ["대표자", B.owner], ["사업자등록번호", B.regNo]],
+      [["주소", B.address]],
+      [["전화", B.showPhone ? B.phone : ""], ["이메일", B.email]]
+    ].map(function(row){
+      var cells = row.filter(function(c){ return c[1]; }).map(function(c){
+        return '<span>'+esc(c[0])+': '+esc(c[1])+'</span>';
+      });
+      return cells.length ? '<div>'+cells.join("")+'</div>' : "";
+    }).join("");
+    document.querySelectorAll("[data-biz]").forEach(function(el){ el.innerHTML = bizRows; });
     document.querySelectorAll("[data-avatar]").forEach(function(el){
       var img = new Image();
       img.alt = S.profile.name + " 프로필";
